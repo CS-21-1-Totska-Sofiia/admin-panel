@@ -4,17 +4,12 @@ import router from './router.js';
 
 
 import * as AzureTableService from "./Services/Table/AzureTableService.js";
+import * as AzureEntityService from "./Services/Table/AzureEntityService.js";
 
-
-const account = "devstoreaccount1";
-const accountKey = "Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==";
-const connectionString = "AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;DefaultEndpointsProtocol=http;BlobEndpoint=http://127.0.0.1:10000/devstoreaccount1;QueueEndpoint=http://127.0.0.1:10001/devstoreaccount1;TableEndpoint=http://127.0.0.1:10002/devstoreaccount1;";
 
 //const credential = new AzureTables.AzureNamedKeyCredential(account, accountKey);
 
 
-
-await AzureTableService.deleteTable(connectionString, "MyTable");
 
 // let tablesIter = serviceClient.listTables();
 // let i = 1;
