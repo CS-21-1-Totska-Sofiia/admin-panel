@@ -3,9 +3,6 @@ import router from './router.js';
 
 
 
-import * as AzureTableService from "./Services/Table/AzureTableService.js";
-import * as AzureEntityService from "./Services/Table/AzureEntityService.js";
-
 
 const PORT = 3000;
 
