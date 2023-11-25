@@ -5,13 +5,9 @@ import * as EntityController from './controllers/Table/EntityController.js';
 const router = express.Router();
 
 
-router.post('/category/create', EntityController.createCategory);
-router.patch('/category/edit', EntityController.editCategory);
-router.delete('/category/delete', EntityController.deleteCategory);
+router.post('/:tableName/create/', EntityController.createEntity);
+router.patch('/:tableName/edit/', EntityController.editEntity);
+router.delete('/:tableName/delete/', EntityController.deleteEntity);
 
-
-router.post('/good/create', EntityController.createGood);
-router.patch('/good/edit', EntityController.editGood);
-router.delete('/good/delete', EntityController.deleteGood);
 
 export default router;
