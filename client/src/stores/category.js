@@ -14,9 +14,9 @@ export const useCategoryStore = defineStore('category', {
             const dataJson = await data.json();
             this.allCategories = dataJson.data;
         },
-        async postCategory(partitionKey, rowKey, name, parentCategory) {
+        async postCategory(name, parentCategory) {
             this.isEntityCreated = 'pending';
-            const result = await fetch(`http://localhost:3000/categories/entity?partitionKey=${partitionKey}&rowKey=${rowKey}`, {
+            const result = await fetch(`http://localhost:3000/categories/entity`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

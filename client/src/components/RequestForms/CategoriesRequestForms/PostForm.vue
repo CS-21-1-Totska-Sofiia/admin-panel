@@ -5,25 +5,19 @@ import { useCategoryStore } from '../../../stores/category.js';
 
 const categoryStore = useCategoryStore();
 
-const partitionKey = ref('');
-const rowKey = ref('');
 const name = ref('');
 const parentCategory = ref(null);
 
 
 
 const sendRequest = async () => {
-    await categoryStore.postCategory(partitionKey.value, rowKey.value, name.value, parentCategory.value);
+    await categoryStore.postCategory(name.value, parentCategory.value);
 }
 
 </script>
 
 <template>
     <form>
-        <label>Partition key</label>
-        <input v-model="partitionKey"/>
-        <label>Row key</label>
-        <input v-model="rowKey"/>
         <div>
         <label>Name</label>
         <input v-model="name"/>
