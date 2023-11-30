@@ -9,10 +9,12 @@ const router = express.Router();
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
+router.get('/:tableName/allEntities', EntityController.getAll);
 
-router.post('/:tableName/create/', EntityController.createEntity);
-router.patch('/:tableName/edit/', EntityController.editEntity);
-router.delete('/:tableName/delete/', EntityController.deleteEntity);
+
+router.post('/:tableName/entity/', EntityController.createEntity);
+router.patch('/:tableName/entity/', EntityController.editEntity);
+router.delete('/:tableName/entity/', EntityController.deleteEntity);
 
 
 router.post('/upload', upload.any(), BlobController.create);
