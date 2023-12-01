@@ -59,21 +59,34 @@ export const useGoodStore = defineStore('good', {
                 this.isEntityUpdated = 'rejected';
         },
         async deleteGood(good) {
-            // await fetch(removeImg(good.imgUrl))
-
             this.isEntityDeleted = 'pending';
-
-            const result = await fetch(`http://localhost:3000/goods/entity?partitionKey=${good.partitionKey}&rowKey=${good.rowKey}`, {
-                method: 'DELETE',
+            
+            const imgRes = await fetch('http://localhost:3000/deleteBlob', {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                body: JSON.stringify({
+                    url: good.imgUrl
+                })
             });
 
-            if (result.status == 200)
-                this.isEntityDeleted = 'fulfilled';
-            else 
+            if (imgRes.status == 200) {
+                const result = await fetch(`http://localhost:3000/goods/entity?partitionKey=${good.partitionKey}&rowKey=${good.rowKey}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                
+                if (result.status == 200)
+                    this.isEntityDeleted = 'fulfilled';
+                else 
+                    this.isEntityDeleted = 'rejected';
+            }
+            else {
                 this.isEntityDeleted = 'rejected';
-        },
+            }
+    },
     }
 });
