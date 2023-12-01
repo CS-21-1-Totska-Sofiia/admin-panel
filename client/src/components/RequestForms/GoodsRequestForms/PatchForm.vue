@@ -11,7 +11,7 @@ const good = ref(null);
 const categoryToEdit = ref(null);
 
 const name = ref('');
-const price = ref(0);
+const price = ref(null);
 const category = ref(null);
 const selectedImgFile = ref(null);
 

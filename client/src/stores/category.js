@@ -28,23 +28,22 @@ export const useCategoryStore = defineStore('category', {
             else this.isEntityCreated = 'rejected';
             console.log(await result.json());
         },
-        async patchCategory(partitionKey, rowKey, name, parentCategory) {
-            const result = await fetch(`http://localhost:3000/categories/entity?partitionKey=${partitionKey}&rowKey=${rowKey}`, {
+        async patchCategory(oldCategory, newName, newParentCategory) {
+            const result = await fetch(`http://localhost:3000/categories/entity`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({name, parentCategory: parentCategory ? parentCategory : 'root'}),
+                body: JSON.stringify({
+                    name: newName ? newName : oldCategory.name, 
+                    parentCategory: newParentCategory ? newParentCategory : oldCategory.parentCategory
+                }),
             });
 
-            if (result.status == 200) {
+            if (result.status == 200)
                 this.isEntityUpdated = 'fulfilled';
-            }
-            else {
+            else
                 this.isEntityUpdated = 'rejected';
-            }
-
-            const resultJson = await result.json();
         },
         async deleteCategory(partitionKey, rowKey) {
             this.isEntityDeleted = 'pending';

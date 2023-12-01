@@ -8,7 +8,7 @@ const goodStore = useGoodStore();
 const categoryStore = useCategoryStore();
 
 const name = ref('');
-const price = ref(0);
+const price = ref(null);
 const category = ref(null);
 const selectedImgFile = ref(null);
 

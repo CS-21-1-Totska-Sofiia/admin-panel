@@ -8,7 +8,7 @@ const categoryStore = useCategoryStore();
 const categoryToUpdate = ref(null);
 
 const name = ref('');
-const parentCategory = ref(null);
+const parentCategory = ref('root');
 
 
 const sendRequest = async () => {

@@ -59,7 +59,6 @@ export const useGoodStore = defineStore('good', {
             // await fetch(removeImg(good.imgUrl))
 
             this.isEntityDeleted = 'pending';
-            console.log(good.partitionKey, good.rowKey);
 
             const result = await fetch(`http://localhost:3000/goods/entity?partitionKey=${good.partitionKey}&rowKey=${good.rowKey}`, {
                 method: 'DELETE',

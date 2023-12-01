@@ -6,7 +6,7 @@ import { useCategoryStore } from '../../../stores/category.js';
 const categoryStore = useCategoryStore();
 
 const name = ref('');
-const parentCategory = ref(null);
+const parentCategory = ref('root');
 
 
 
