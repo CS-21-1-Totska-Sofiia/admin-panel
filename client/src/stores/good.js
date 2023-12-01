@@ -10,6 +10,7 @@ export const useGoodStore = defineStore('good', {
 
     actions: {
         async getAllGoods() {
+            this.allGoods = [];
             const data = await fetch('http://localhost:3000/goods/allEntities');
             const dataJson = await data.json();
             this.allGoods = dataJson.data;
@@ -29,6 +30,8 @@ export const useGoodStore = defineStore('good', {
 
             if (result.status == 200) this.isEntityCreated = 'fulfilled';
             else this.isEntityCreated = 'rejected';
+
+            this.allGoods.push((await result.json()).createdEntity);
 
         },
         async patchGood(oldGood, newName, newPrice, newCategory, newImgFormData) {

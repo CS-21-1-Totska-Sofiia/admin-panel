@@ -37,6 +37,7 @@ const sendRequest = async () => {
     }
 
     await goodStore.patchGood(good.value, name.value, price.value, category.value, formData);
+    await goodStore.getAllGoods();
 }
 
 </script>

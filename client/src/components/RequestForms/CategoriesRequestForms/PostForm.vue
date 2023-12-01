@@ -12,6 +12,7 @@ const parentCategory = ref('root');
 
 const sendRequest = async () => {
     await categoryStore.postCategory(name.value, parentCategory.value);
+    await categoryStore.getAllCategories();
 }
 
 </script>

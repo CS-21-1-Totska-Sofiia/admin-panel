@@ -10,6 +10,7 @@ export const useCategoryStore = defineStore('category', {
 
     actions: {
         async getAllCategories() {
+            this.allCategories = [];
             const data = await fetch('http://localhost:3000/categories/allEntities');
             const dataJson = await data.json();
             this.allCategories = dataJson.data;
@@ -29,7 +30,7 @@ export const useCategoryStore = defineStore('category', {
             console.log(await result.json());
         },
         async patchCategory(oldCategory, newName, newParentCategory) {
-            const result = await fetch(`http://localhost:3000/categories/entity`, {
+            const result = await fetch(`http://localhost:3000/categories/entity?partitionKey=${oldCategory.partitionKey}&rowKey=${oldCategory.rowKey}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',

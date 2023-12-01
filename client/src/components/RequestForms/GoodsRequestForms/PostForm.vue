@@ -22,6 +22,7 @@ const sendRequest = async () => {
     formData.append("image", selectedImgFile.value);
 
     await goodStore.postGood(name.value, price.value, category.value, formData);
+    await goodStore.getAllGoods();
 }
 
 </script>

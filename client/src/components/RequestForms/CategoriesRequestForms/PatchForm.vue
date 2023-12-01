@@ -13,7 +13,8 @@ const parentCategory = ref('root');
 
 const sendRequest = async () => {
     console.log(categoryToUpdate.value);
-    await categoryStore.patchCategory(categoryToUpdate.value.partitionKey, categoryToUpdate.value.rowKey, name.value, parentCategory.value);
+    await categoryStore.patchCategory(categoryToUpdate.value, name.value, parentCategory.value);
+    await categoryStore.getAllCategories();
 }
 
 </script>

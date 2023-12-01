@@ -10,6 +10,7 @@ const categoryToDelete = ref(null);
 
 const sendRequest = async () => {
     await categoryStore.deleteCategory(categoryToDelete.value.partitionKey, categoryToDelete.value.rowKey);
+    await categoryStore.getAllCategories();
 }
 
 </script>
