@@ -18,6 +18,7 @@ router.delete('/:tableName/entity/', EntityController.deleteEntity);
 
 
 router.post('/upload', upload.any(), BlobController.create);
+router.post('/deleteBlob', BlobController.deleteBlob);
 
 
 export default router;

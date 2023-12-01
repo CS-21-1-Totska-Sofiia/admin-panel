@@ -15,3 +15,14 @@ export const create = async (req, res) => {
         res.status(500).json({msg: "error"});
     }
 }
+
+export const deleteBlob = async (req, res) => {
+    const url = req.body.url;
+    console.log(url);
+    try {
+        await AzureBlobService.deleteBlob(url);
+        res.status(200).json({msg: "Deleted blob"});
+    } catch (error) {
+        res.status(500).json({msg: "Failed to delete blob"});
+    }
+}

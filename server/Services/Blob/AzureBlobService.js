@@ -16,3 +16,14 @@ export const upload = async (buffer, bufferSize, fileName) => {
 
     return blockBlobClient.url;
 }
+
+export const deleteBlob = async (url) => {
+    const blobClient = AzureStorageBlob.BlobServiceClient.fromConnectionString(connectionString);
+    
+    const containerName = "images";
+    const blobName = url.split('/').pop();
+    console.log(blobName);
+
+    const containerClient = blobClient.getContainerClient(containerName);
+    await containerClient.deleteBlob(blobName);
+}
