@@ -1,5 +1,5 @@
 import * as AzureEntityService from '../../Services/Table/AzureEntityService.js';
-import { generateKeys } from '../../utils/generateKeys.js';
+import { generateKey } from '../../utils/generateKeys.js';
 
 
 export const getAll = async (req, res) => {
@@ -25,14 +25,15 @@ export const createEntity = async (req, res) => {
     const tableName = req.params.tableName;
     const dataObj = req.body;
 
-    let keys = {};
+    let partitionKey = '';
     if (tableName == 'categories')
-        keys = generateKeys(dataObj.parentCategory, dataObj.name);
+        partitionKey = 'category';
     else if (tableName == 'goods')
-        keys = generateKeys(dataObj.category, dataObj.name);
+        partitionKey = dataObj.category;
 
+    let rowKey = generateKey()
     try {
-        await AzureEntityService.create(tableName, keys.partitionKey, keys.rowKey, dataObj);
+        await AzureEntityService.create(tableName, partitionKey, rowKey, dataObj);
         res.status(200).json({msg: "Created entity"});
     } catch (error) {
         console.log(error);

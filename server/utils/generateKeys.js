@@ -1,5 +1,6 @@
-export const generateKeys = (partitionKeyInit, rowKeyInit) => {
-    const partitionKey = partitionKeyInit.replace(' ', '-');
-    const rowKey = rowKeyInit.replace(' ', '-');
-    return {partitionKey, rowKey};
+import { v4 as uuidv4 } from "uuid";
+
+export const generateKey = () => {
+    const rowKey = uuidv4();
+    return rowKey;
 }
