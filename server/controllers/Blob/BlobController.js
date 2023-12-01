@@ -3,7 +3,6 @@ import * as AzureContainerService from '../../Services/Blob/AzureContainerServic
 
 export const create = async (req, res) => {
     const uploadedFiles = req.files;
-
     const urls = [];
     try {
         for (let i = 0; i < uploadedFiles.length; i++) {
@@ -13,5 +12,6 @@ export const create = async (req, res) => {
         res.status(200).json(urls);
     } catch (error) {
         console.log(error);
+        res.status(500).json({msg: "error"});
     }
 }

@@ -25,7 +25,11 @@ export const createEntity = async (req, res) => {
     const tableName = req.params.tableName;
     const dataObj = req.body;
 
-    const keys = generateKeys(dataObj.name, dataObj.parentCategory);
+    let keys = {};
+    if (tableName == 'categories')
+        keys = generateKeys(dataObj.parentCategory, dataObj.name);
+    else if (tableName == 'goods')
+        keys = generateKeys(dataObj.category, dataObj.name);
 
     try {
         await AzureEntityService.create(tableName, keys.partitionKey, keys.rowKey, dataObj);

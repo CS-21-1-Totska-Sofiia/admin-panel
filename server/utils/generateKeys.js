@@ -1,5 +1,5 @@
-export const generateKeys = (category, parentCategory) => {
-    const partitionKey = parentCategory.replace(' ', '-');
-    const rowKey = category.replace(' ', '-');
+export const generateKeys = (partitionKeyInit, rowKeyInit) => {
+    const partitionKey = partitionKeyInit.replace(' ', '-');
+    const rowKey = rowKeyInit.replace(' ', '-');
     return {partitionKey, rowKey};
 }
