@@ -2,35 +2,58 @@
 import {ref} from 'vue';
 
 import { useGoodStore } from '../../../stores/good.js';
+import { useCategoryStore } from '../../../stores/category';
 
 const goodStore = useGoodStore();
+const categoryStore = useCategoryStore();
 
-const partitionKey = ref('');
-const rowKey = ref('');
+const good = ref(null);
+const categoryToDelete = ref(null);
+
+const entitiesInActiveCategory = ref([]);
+
+
+const switchCategory = () => {
+    entitiesInActiveCategory.value = [];
+    goodStore.allGoods.forEach(good => {
+        if (good.category == categoryToDelete.value.name)
+            entitiesInActiveCategory.value.push(good);
+    });
+}
 
 
 const sendRequest = async () => {
-    await goodStore.deleteGood(partitionKey.value, rowKey.value);
+    await goodStore.deleteGood(good.value);
 }
 
 </script>
 
 <template>
     <form>
-        <label>Partition key</label>
-        <input v-model="partitionKey"/>
-        <label>Row key</label>
-        <input v-model="rowKey"/>
+        <label>Category</label>
+        <select v-model="categoryToDelete" @change="switchCategory">
+            <option v-for="i in categoryStore.allCategories.length" :key="i"
+                    :value="categoryStore.allCategories[i-1]">
+                {{ categoryStore.allCategories[i-1].name }}
+            </option>
+        </select>
+        <label>Good</label>
+        <select v-model="good">
+            <option v-for="i in entitiesInActiveCategory.length" :key="i"
+                    :value="entitiesInActiveCategory[i-1]">
+                {{ entitiesInActiveCategory[i-1].name }}
+            </option>
+        </select>
     </form>
     <button class="send-btn" @click="sendRequest">Delete good</button>
-    <div class="result">
-        <div class="success"><p>Deleted</p></div>
-        <div class="fail">Failed to delete</div>
+    <div class="result" v-if="goodStore.isEntityDeleted != 'pending'">
+        <div class="success" v-if="goodStore.isEntityDeleted == 'fulfilled'"><p>Deleted</p></div>
+        <div class="fail" v-if="goodStore.isEntityDeleted == 'rejected'">Failed to delete</div>
     </div>
 </template>
 
 <style scoped>
-input {
+input, select {
     margin-right: 20px;
     border-radius: 5px;
     border: 1px solid gray;
@@ -38,10 +61,6 @@ input {
 }
 label {
     margin-right: 5px;
-}
-select {
-    padding: 3px;
-    border-radius: 5px;
 }
 .send-btn {
     background: #d9effe;

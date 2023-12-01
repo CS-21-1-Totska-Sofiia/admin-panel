@@ -12,9 +12,14 @@ import GoodPatchForm from './components/RequestForms/GoodsRequestForms/PatchForm
 import GoodDeleteForm from './components/RequestForms/GoodsRequestForms/DeleteForm.vue';
 
 import { useCategoryStore } from './stores/category.js';
+import { useGoodStore } from './stores/good';
 
+
+const goodStore = useGoodStore();
 const categoryStore = useCategoryStore();
 
+
+goodStore.getAllGoods();
 categoryStore.getAllCategories();
 
 const showCategories = ref(true);
@@ -58,21 +63,21 @@ const changeTable = (isCategories) => {
   </div>
   <div class="table-interaction-wrapper" v-if="!showCategories">
 		<div class="request-container">
-			<RequestContainer request-title="post" request-string="/good/create">
+			<RequestContainer request-title="post" request-string="/goods/entity">
 				<template v-slot:form>
 					<GoodPostForm/>
 				</template>
 			</RequestContainer>
 		</div>
     <div class="request-container">
-      <RequestContainer request-title="patch" request-string="/good/edit">
+      <RequestContainer request-title="patch" request-string="/goods/entity">
         <template v-slot:form>
           <GoodPatchForm/>
         </template>
       </RequestContainer>
     </div>
     <div class="request-container">
-      <RequestContainer request-title="delete" request-string="/good/delete">
+      <RequestContainer request-title="delete" request-string="/goods/entity">
         <template v-slot:form>
           <GoodDeleteForm/>
         </template>

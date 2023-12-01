@@ -2,51 +2,89 @@
 import {ref} from 'vue';
 
 import { useGoodStore } from '../../../stores/good.js';
+import { useCategoryStore } from '../../../stores/category';
 
 const goodStore = useGoodStore();
+const categoryStore = useCategoryStore();
 
+const good = ref(null);
+const categoryToEdit = ref(null);
 
-const partitionKey = ref('');
-const rowKey = ref('');
 const name = ref('');
-const parentCategory = ref(null);
+const price = ref(0);
+const category = ref(null);
+const selectedImgFile = ref(null);
 
+const entitiesInActiveCategory = ref([]);
 
+const selectFile = (event) => {
+    selectedImgFile.value = event.target.files[0];
+}
 
-const sendRequest = () => {
-    goodStore.patchGood(partitionKey.value, rowKey.value, name.value, parentCategory.value);
+const switchCategory = () => {
+    entitiesInActiveCategory.value = [];
+    goodStore.allGoods.forEach(good => {
+        if (good.category == categoryToEdit.value.name)
+            entitiesInActiveCategory.value.push(good);
+    });
+}
+
+const sendRequest = async () => {
+    let formData = null;
+    if (selectedImgFile.value != null) {
+        formData = new FormData();
+        formData.append("image", selectedImgFile.value);
+    }
+
+    await goodStore.patchGood(good.value, name.value, price.value, category.value, formData);
 }
 
 </script>
 
 <template>
     <form>
-        <label>Partition key</label>
-        <input v-model="partitionKey"/>
-        <label>Row key</label>
-        <input v-model="rowKey"/>
-        <div>
-        <label>New name</label>
-        <input v-model="name"/>
-        <label>New parent category</label>
-        <select v-model="parentCategory">
-            <option value="root">None</option>
-            <option v-for="i in goodStore.allGoods.length" :key="i"
-                    :value="goodStore.allGoods[i-1].name">
-                {{ goodStore.allGoods[i-1].name }}
+        <label>Category</label>
+        <select v-model="categoryToEdit" @change="switchCategory">
+            <option v-for="i in categoryStore.allCategories.length" :key="i"
+                    :value="categoryStore.allCategories[i-1]">
+                {{ categoryStore.allCategories[i-1].name }}
             </option>
         </select>
+        <label>Good</label>
+        <select v-model="good">
+            <option v-for="i in entitiesInActiveCategory.length" :key="i"
+                    :value="entitiesInActiveCategory[i-1]">
+                {{ entitiesInActiveCategory[i-1].name }}
+            </option>
+        </select>
+        <div>
+            <label>Name</label>
+            <input v-model="name"/>
+            <label>Price</label>
+            <input v-model="price" type="number"/>
+            <label>Category</label>
+            <select v-model="category">
+                <option v-for="i in categoryStore.allCategories.length" :key="i"
+                        :value="categoryStore.allCategories[i-1]">
+                    {{ categoryStore.allCategories[i-1].name }}
+                </option>
+            </select>
+        </div>
+        <div>
+            <label for="filesEdit" class="select-file-btn">Select Image</label>
+            <input id="filesEdit" type="file" style="display: none;" @change="selectFile" lang="en">
+            <label>{{ selectedImgFile?.name }}</label>
         </div>
     </form>
     <button class="send-btn" @click="sendRequest">Edit good</button>
-    <div class="result">
-        <div class="success"><p>Updated</p></div>
-        <div class="fail">Failed to update</div>
+    <div class="result" v-if="goodStore.isEntityUpdated != 'pending'">
+        <div class="success" v-if="goodStore.isEntityUpdated == 'fulfilled'"><p>Updated</p></div>
+        <div class="fail" v-if="goodStore.isEntityUpdated == 'rejected'">Failed to update</div>
     </div>
 </template>
 
 <style scoped>
-input {
+input, select {
     margin-right: 20px;
     border-radius: 5px;
     border: 1px solid gray;
@@ -54,10 +92,6 @@ input {
 }
 label {
     margin-right: 5px;
-}
-select {
-    padding: 3px;
-    border-radius: 5px;
 }
 .send-btn {
     background: #d9effe;
@@ -96,5 +130,11 @@ p {
 
 div {
     margin-top: 20px;
+}
+.select-file-btn {
+    border: 1px solid rgb(144, 144, 144);
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
 }
 </style>

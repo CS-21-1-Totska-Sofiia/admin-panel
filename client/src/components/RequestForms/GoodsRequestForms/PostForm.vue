@@ -2,45 +2,55 @@
 import {ref} from 'vue';
 
 import { useGoodStore } from '../../../stores/good.js';
+import { useCategoryStore } from '../../../stores/category';
 
 const goodStore = useGoodStore();
+const categoryStore = useCategoryStore();
 
-const partitionKey = ref('');
-const rowKey = ref('');
 const name = ref('');
-const parentCategory = ref(null);
+const price = ref(0);
+const category = ref(null);
+const selectedImgFile = ref(null);
 
 
+const selectFile = (event) => {
+    selectedImgFile.value = event.target.files[0];
+}
 
-const sendRequest = () => {
-    goodStore.postGood(partitionKey.value, rowKey.value, name.value, parentCategory.value);
+const sendRequest = async () => {
+    const formData = new FormData();
+    formData.append("image", selectedImgFile.value);
+
+    await goodStore.postGood(name.value, price.value, category.value, formData);
 }
 
 </script>
 
 <template>
     <form>
-        <label>Partition key</label>
-        <input v-model="partitionKey"/>
-        <label>Row key</label>
-        <input v-model="rowKey"/>
-        <div>
         <label>Name</label>
         <input v-model="name"/>
-        <label>Parent category</label>
-        <select v-model="parentCategory">
-            <option value="root">None</option>
-            <option v-for="i in goodStore.allGoods.length" :key="i"
-                    :value="goodStore.allGoods[i-1].name">
-                {{ goodStore.allGoods[i-1].name }}
+        <label>Price</label>
+        <input v-model="price" type="number"/>
+        <div>
+        <label>Category</label>
+        <select v-model="category">
+            <option v-for="i in categoryStore.allCategories.length" :key="i"
+                    :value="categoryStore.allCategories[i-1]">
+                {{ categoryStore.allCategories[i-1].name }}
             </option>
         </select>
         </div>
+        <div>
+            <label for="files" class="select-file-btn">Select Image</label>
+            <input id="files" type="file" style="display: none;" @change="selectFile" lang="en">
+            <label>{{ selectedImgFile?.name }}</label>
+        </div>
     </form>
     <button class="send-btn" @click="sendRequest">Create good</button>
-    <div class="result">
-        <div class="success"><p>Created</p></div>
-        <div class="fail">Failed to create</div>
+    <div class="result" v-if="goodStore.isEntityCreated != 'pending'">
+        <div class="success" v-if="goodStore.isEntityCreated == 'fulfilled'"><p>Created</p></div>
+        <div class="fail" v-if="goodStore.isEntityCreated == 'rejected'">Failed to create</div>
     </div>
 </template>
 
@@ -95,5 +105,11 @@ p {
 
 div {
     margin-top: 20px;
+}
+.select-file-btn {
+    border: 1px solid rgb(144, 144, 144);
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
 }
 </style>
