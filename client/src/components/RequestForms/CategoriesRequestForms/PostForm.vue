@@ -5,14 +5,20 @@ import { useCategoryStore } from '../../../stores/category.js';
 
 const categoryStore = useCategoryStore();
 
-const name = ref('');
+const name = ref(null);
 const parentCategory = ref('root');
 
 
+const validateEmpty = (field) => {
+    if (name.value)
+        return true;
+}
 
 const sendRequest = async () => {
-    await categoryStore.postCategory(name.value, parentCategory.value);
-    await categoryStore.getAllCategories();
+    if (validateEmpty(name)) {
+        await categoryStore.postCategory(name.value, parentCategory.value);
+        await categoryStore.getAllCategories();
+    }
 }
 
 </script>

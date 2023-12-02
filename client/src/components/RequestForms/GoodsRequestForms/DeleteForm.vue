@@ -23,8 +23,10 @@ const switchCategory = () => {
 
 
 const sendRequest = async () => {
-    await goodStore.deleteGood(good.value);
-    await goodStore.getAllGoods();
+    if (good.value) {
+        await goodStore.deleteGood(good.value);
+        await goodStore.getAllGoods();
+    }
 }
 
 </script>

@@ -7,8 +7,8 @@ import { useCategoryStore } from '../../../stores/category';
 const goodStore = useGoodStore();
 const categoryStore = useCategoryStore();
 
-const name = ref('');
-const price = ref(null);
+const name = ref(null);
+const price = ref(1);
 const category = ref(null);
 const selectedImgFile = ref(null);
 
@@ -18,11 +18,15 @@ const selectFile = (event) => {
 }
 
 const sendRequest = async () => {
-    const formData = new FormData();
-    formData.append("image", selectedImgFile.value);
+    if (name.value && price.value >= 0.01 && category.value && selectedImgFile.value) {
+        const formData = new FormData();
+        formData.append("image", selectedImgFile.value);
 
-    await goodStore.postGood(name.value, price.value, category.value, formData);
-    await goodStore.getAllGoods();
+        console.log(price.value);
+
+        await goodStore.postGood(name.value, price.value, category.value, formData);
+        await goodStore.getAllGoods();
+    }
 }
 
 </script>
@@ -32,7 +36,7 @@ const sendRequest = async () => {
         <label>Name</label>
         <input v-model="name"/>
         <label>Price</label>
-        <input v-model="price" type="number"/>
+        <input v-model="price" type="number" min="0.01"/>
         <div>
         <label>Category</label>
         <select v-model="category">

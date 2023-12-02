@@ -7,14 +7,19 @@ const categoryStore = useCategoryStore();
 
 const categoryToUpdate = ref(null);
 
-const name = ref('');
+const name = ref(null);
 const parentCategory = ref('root');
 
 
 const sendRequest = async () => {
-    console.log(categoryToUpdate.value);
-    await categoryStore.patchCategory(categoryToUpdate.value, name.value, parentCategory.value);
-    await categoryStore.getAllCategories();
+    console.log(parentCategory.value, categoryToUpdate.value.parentCategory);
+    if (categoryToUpdate.value && (name.value || parentCategory.value != categoryToUpdate.value.parentCategory )) {
+        await categoryStore.patchCategory(categoryToUpdate.value, name.value, parentCategory.value);
+        await categoryStore.getAllCategories();
+    }
+    else {
+        console.log("No data provided");
+    }
 }
 
 </script>

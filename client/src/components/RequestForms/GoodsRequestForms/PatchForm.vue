@@ -10,7 +10,7 @@ const categoryStore = useCategoryStore();
 const good = ref(null);
 const categoryToEdit = ref(null);
 
-const name = ref('');
+const name = ref(null);
 const price = ref(null);
 const category = ref(null);
 const selectedImgFile = ref(null);
@@ -30,14 +30,20 @@ const switchCategory = () => {
 }
 
 const sendRequest = async () => {
-    let formData = null;
-    if (selectedImgFile.value != null) {
-        formData = new FormData();
-        formData.append("image", selectedImgFile.value);
-    }
+    if (categoryToEdit.value && good.value) {
+        if ((name.value && name.value != good.value.name) || (price.value >= 0.01 && price.value != good.value.price) || 
+            (category.value && category.value.name != good.category) || selectedImgFile.value) {
 
-    await goodStore.patchGood(good.value, name.value, price.value, category.value, formData);
-    await goodStore.getAllGoods();
+            let formData = null;
+            if (selectedImgFile.value != null) {
+                formData = new FormData();
+                formData.append("image", selectedImgFile.value);
+            }
+        
+            await goodStore.patchGood(good.value, name.value, price.value, category.value, formData);
+            await goodStore.getAllGoods();
+        }
+    }
 }
 
 </script>
@@ -62,7 +68,7 @@ const sendRequest = async () => {
             <label>Name</label>
             <input v-model="name"/>
             <label>Price</label>
-            <input v-model="price" type="number"/>
+            <input v-model="price" type="number" min="0.01"/>
             <label>Category</label>
             <select v-model="category">
                 <option v-for="i in categoryStore.allCategories.length" :key="i"
