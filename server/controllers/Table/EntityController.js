@@ -46,9 +46,18 @@ export const editEntity = async (req, res) => {
     const partitionKey = req.query.partitionKey;
     const rowKey = req.query.rowKey;
     const newDataObj = req.body;
-
+    
     try {
-        await AzureEntityService.update(tableName, partitionKey, rowKey, newDataObj, false);
+        const oldEntity = AzureEntityService.getOne(tableName, partitionKey, rowKey);
+        if (tableName == 'goods' && oldEntity.category != newDataObj.category) {
+                await AzureEntityService.deleteEntity(tableName, partitionKey, rowKey);
+                const newPartitionKey = newDataObj.category;
+                const newRowKey = generateKey();
+                await AzureEntityService.create(tableName, newPartitionKey, newRowKey, newDataObj);
+        }
+        else
+            await AzureEntityService.update(tableName, partitionKey, rowKey, newDataObj, false);
+        
         res.status(200).json({msg: "Updated entity"});
     } catch (error) {
         console.log(error);
