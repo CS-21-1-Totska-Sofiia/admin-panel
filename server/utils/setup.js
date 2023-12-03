@@ -5,5 +5,5 @@ export const setup = async () => {
     await AzureTableService.createTableIfNotExists('categories');
     await AzureTableService.createTableIfNotExists('goods');
     
-    await AzureContainerService.createContainerIfNotExists('images');
+    await AzureContainerService.createContainerIfNotExists('imagesdsf', "blob");
 }
