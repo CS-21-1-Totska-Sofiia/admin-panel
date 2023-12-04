@@ -1,4 +1,5 @@
 import * as AzureEntityService from '../../Services/Table/AzureEntityService.js';
+import * as AzureQueueService from '../../Services/Queue/AzureQueueService.js';
 import { generateKey } from '../../utils/generateKeys.js';
 
 
@@ -34,6 +35,9 @@ export const createEntity = async (req, res) => {
     let rowKey = generateKey()
     try {
         await AzureEntityService.create(tableName, partitionKey, rowKey, dataObj);
+        if (tableName == 'goods') {
+            AzureQueueService.send({partitionKey, rowKey, imgUrl: dataObj.imgUrl});
+        }
         res.status(200).json({msg: "Created entity"});
     } catch (error) {
         console.log(error);
@@ -54,6 +58,7 @@ export const editEntity = async (req, res) => {
                 const newPartitionKey = newDataObj.category;
                 const newRowKey = generateKey();
                 await AzureEntityService.create(tableName, newPartitionKey, newRowKey, newDataObj);
+                AzureQueueService.send({partitionKey: newPartitionKey, rowKey: newRowKey, imgUrl: newDataObj.imgUrl});
         }
         else
             await AzureEntityService.update(tableName, partitionKey, rowKey, newDataObj, false);
